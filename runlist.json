@@ -1,0 +1,5 @@
+{
+
+"run_list":["recipe[httpd::default]", "recipe[mysql::default]", "recipe[tomcat::default]"]
+
+}

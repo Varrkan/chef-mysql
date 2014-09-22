@@ -1,0 +1,83 @@
+#!/bin/bash
+#
+# tomcat
+#
+# chkconfig: - 80 20
+#
+### BEGIN INIT INFO
+# Provides: tomcat
+# Required-Start: $network $syslog
+# Required-Stop: $network $syslog
+# Default-Start:
+# Default-Stop:
+# Description:
+# Short-Description: start and stop tomcat
+### END INIT INFO
+
+
+export CATALINA_HOME=<%=@binhome%>
+export CATALINA_PID=<%=@binhome-%>/tomcat.pid
+
+export JAVA_OPTS='<%=@x.map{|k,v| '-X'+k+v+' '}.join + @xx.map{|k,v| '-XX:'+k+'='+v+' '}.join-%>'
+
+#export CATALINA_OPTS='-Xms1g -Xmx8g -XX:MaxPermSize=256m'
+
+TOMCAT_USER=<%=@tomcat_user%>
+TOMCAT_START=<%=@binhome-%>/bin/startup.sh
+TOMCAT_STOP=<%=@binhome-%>/bin/shutdown.sh
+
+SU="su -s /bin/bash"
+
+start()
+{
+  $SU $TOMCAT_USER -c $TOMCAT_START
+}
+
+stop()
+{
+  $SU $TOMCAT_USER -c $TOMCAT_STOP 30
+}
+
+status()
+{
+  if [ ! -f $CATALINA_PID ]; then
+    echo "Tomcat is stopped"
+    exit 1
+  else
+    PID=`cat $CATALINA_PID`
+    if [ -d "/proc/${PID}" ]; then
+      echo "Tomcat is running"
+      exit 0
+    else
+      echo "Tomcat is terminated but PID file exists"
+      exit 2
+    fi
+  fi
+}
+
+case "$1" in 
+  'start')
+    echo "Starting Tomcat"
+    start
+    ;;
+
+  'stop')
+    echo "Stopping Tomcat"
+    stop
+    ;;
+
+  'restart')
+    echo "Restarting Tomcat"
+    stop
+    start
+    ;;
+
+  'status')
+    status
+    ;;
+
+  *)
+    echo "Usage $0 start/stop/restart/status"
+    exit 1
+    ;;
+esac
