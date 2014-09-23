@@ -110,3 +110,17 @@ ark 'mysql-connector-java' do
          path '/data/tomcat/lib'
             action :cherry_pick
              end
+             
+             cookbook_file "/root/mtn" do
+               source "maintenance.html"
+                 mode '0755'
+                   owner 'apache'
+                     group 'apache'
+                     end
+             
+             cookbook_file "/data/tomcat/conf" do
+               source "context.xml"
+                 mode '0755'
+                   owner 'tomcat'
+                     group 'tomcat'
+                     end

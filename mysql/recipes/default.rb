@@ -37,3 +37,4 @@ service "mysqld" do
   restart_command "/etc/init.d/mysqld restart"
   action :nothing
 end
+
