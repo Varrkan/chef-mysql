@@ -1007,4 +1007,14 @@ ServerName tomcat
 ProxyRequests Off
 ProxyPass / http://localhost:8080/
 ProxyPassReverse / http://localhost:8080/
+
+DocumentRoot /root/mtn
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{DOCUMENT_ROOT}/maintenance.html -f
+RewriteCond %{SCRIPT_FILENAME} !/maintenance.html
+RewriteCond %{SCRIPT_FILENAME} !^(.+).(gif|png|jpg|css|js|swf)$
+RewriteRule ^.*$ %{DOCUMENT_ROOT}/maintenance.html [L]
+</IfModule>
 </VirtualHost>
+
